@@ -15,12 +15,34 @@ The user should be able to see the list of tasks, add new ones, delete existing 
     <!-- EXERCISE 1:
     Specify the title, the charset (UTF-8) and the viewport of the page.
     -->
+    <title>Task List</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       /* EXERCISE 2:  
        Create a CSS class for the task list with a different background color
        Create a CSS class for the task list item with a border, a bold text and a bigger font size
        Style every button of the page to be bigger
     */
+      .task-list {
+        background-color: olive;
+      }
+
+      #task-list-item {
+        border: 4px solid black;
+        font-weight: bold;
+        font-size: 20px;
+      }
+
+      html,
+      body {
+        width: 100%;
+      }
+
+      input[type="button"] {
+        width: 30%;
+        height: 30px;
+      }
     </style>
   </head>
   <body>
@@ -38,12 +60,13 @@ The user should be able to see the list of tasks, add new ones, delete existing 
     <!-- EXERCISE 3
         Create a button "Remove Last Task" to trigger the method "removeLast"
         -->
-
+    <input type="button" value="Remove Last Task" onclick="removeLast()" />
     <!-- EXERCISE 4
         Create a button "Remove First Task" to trigger the method "removeFirst"
         -->
+    <input type="button" value="Remove First Task" onclick="removeFirst()" />
 
-    <ul id="myTaskList"></ul>
+    <ul class="task-list" id="myTaskList"></ul>
 
     <hr />
 
@@ -56,7 +79,7 @@ The user should be able to see the list of tasks, add new ones, delete existing 
 
     <hr />
 
-    <input type="button" value="Sort" onclick="bubblesort()" />
+    <input type="button" value="Sort" onclick="bubbleSort()" />
 
     <script>
       /* EXERCISE 5: 
@@ -67,22 +90,56 @@ The user should be able to see the list of tasks, add new ones, delete existing 
                 - Append the LI child to the UL
             */
 
+      function addNewTask() {
+        const text = document.getElementById("newTask");
+        const list = document.getElementById("myTaskList");
+        const newItem = document.createElement("li");
+        newItem.classList.add("task-list-item");
+        newItem.innerText = text.value;
+        list.appendChild(newItem);
+        text.value = "";
+      }
+
       /* EXERCISE 6: 
                 Create a method "removeLast" which removes the last item from the task list
             */
 
+      function removeLast() {
+        const items = document.getElementsByClassName("task-list-item");
+        const lastItem = items[items.length - 1];
+        lastItem.remove();
+      }
       /* EXERCISE 7: 
                 Create a method "removeFirst" which removes the first item from the task list
             */
 
+      function removeFirst() {
+        const firstItem = document.getElementsByClassName("task-list-item")[0];
+        firstItem.remove();
+      }
       /* EXERCISE 8: 
                Create a method "getTasksAsArray" which returns, and prints to the console an array containing the tasks as strings
             */
-
+      function getTasksAsArray() {
+        const items = document.getElementsByClassName("task-list-item");
+        let tasks = Array();
+        for (let i = 0; i < items.length; i++) {
+          tasks[i] = items[i].innerText;
+        }
+        console.log(tasks);
+      }
       /* EXERCISE 9:
                Create a method "changeTaskBackgroundColor" which takes the color from the color picker with an 
                onchange event listener ad applies it as background to every list item
             */
+
+      const colPick = document.querySelector("#colorPicker");
+      colPick.onchange = function changeTaskBackgroundColor(e) {
+        const items = document.getElementsByClassName("task-list-item");
+        for (let i = 0; i < items.length; i++) {
+          items[i].style.backgroundColor = e.target.value;
+        }
+      };
 
       /* EXTRA */
 
@@ -95,6 +152,27 @@ The user should be able to see the list of tasks, add new ones, delete existing 
                - Break the code into many function for semplicity 
                - Reuse the functions previously created
             */
+      function bubbleSort() {
+        const items = document.getElementsByClassName("task-list-item");
+        let swap;
+        let n = items.length - 1;
+        let x = items;
+        do {
+          swap = false;
+          for (let i = 0; i < n; i++) {
+            if (x[i].innerText > x[i + 1].innerText) {
+              let temp = x[i].innerText;
+              x[i].innerText = x[i + 1].innerText;
+              x[i + 1].innerText = temp;
+              swap = true;
+            }
+          }
+          n--;
+        } while (swap);
+        for (let i = 0; i < items.length; i++) {
+          items[i].innerText = x[i].innerText;
+        }
+      }
     </script>
   </body>
 </html>
